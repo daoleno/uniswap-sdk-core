@@ -4,7 +4,7 @@ import "math/big"
 
 type CurrencyAmount struct {
 	*Fraction
-	Currency     Currency
+	Currency     *Currency
 	DecimalScale *big.Int
 }
 
@@ -13,7 +13,7 @@ type CurrencyAmount struct {
  * @param currency the currency in the amount
  * @param rawAmount the raw token or ether amount
  */
-func FromRawAmount(currency Currency, rawAmount *big.Int) *CurrencyAmount {
+func FromRawAmount(currency *Currency, rawAmount *big.Int) *CurrencyAmount {
 	return NewCurrencyAmount(currency, rawAmount, big.NewInt(1))
 }
 
@@ -23,12 +23,12 @@ func FromRawAmount(currency Currency, rawAmount *big.Int) *CurrencyAmount {
  * @param numerator the numerator of the fractional token amount
  * @param denominator the denominator of the fractional token amount
  */
-func FromFractionalAmount(currency Currency, numerator *big.Int, denominator *big.Int) *CurrencyAmount {
+func FromFractionalAmount(currency *Currency, numerator *big.Int, denominator *big.Int) *CurrencyAmount {
 	return NewCurrencyAmount(currency, numerator, denominator)
 }
 
 // NewCurrencyAmount creates a new CurrencyAmount instance
-func NewCurrencyAmount(currency Currency, numerator, denominator *big.Int) *CurrencyAmount {
+func NewCurrencyAmount(currency *Currency, numerator, denominator *big.Int) *CurrencyAmount {
 	return &CurrencyAmount{
 		Currency:     currency,
 		Fraction:     NewFraction(numerator, denominator),

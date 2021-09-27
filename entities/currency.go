@@ -41,3 +41,8 @@ func NewTokenCurrency(chainID int, decimals int, symbol string, name string) *Cu
 		Name:     name,
 	}
 }
+
+// Equal returns whether the currency is equal to the other currency
+func (c *Currency) Equal(other *Currency) bool {
+	return c.ChainID == other.ChainID && c.Decimals == other.Decimals && c.Symbol == other.Symbol && c.Name == other.Name
+}

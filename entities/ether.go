@@ -5,7 +5,7 @@ type Ether struct {
 }
 
 // Ether is the main usage of a 'native' currency, i.e. for Ethereum mainnet and all testnets
-func NewEther(chainID int) *Ether {
+func NewEther(chainID uint) *Ether {
 	return &Ether{
 		Currency: NewNativeCurrency(chainID, 18, "ETH", "Ether"),
 	}

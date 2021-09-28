@@ -3,6 +3,8 @@ package entities
 import (
 	"errors"
 	"strings"
+
+	"github.com/ethereum/go-ethereum/common"
 )
 
 var (
@@ -13,11 +15,11 @@ var (
 // Represents an ERC20 token with a unique address and some metadata.
 type Token struct {
 	*Currency
-	Address string // The contract address on the chain on which this token lives
+	Address common.Address // The contract address on the chain on which this token lives
 }
 
 // NewToken creates a new token with the given currency and address.
-func NewToken(chainID int, address string, decimals int, symbol string, name string) *Token {
+func NewToken(chainID uint, address common.Address, decimals uint, symbol string, name string) *Token {
 	return &Token{
 		Currency: NewTokenCurrency(chainID, decimals, symbol, name),
 		Address:  address,
@@ -47,5 +49,5 @@ func (t *Token) SortsBefore(other *Token) (bool, error) {
 	if t.Address == other.Address {
 		return false, ErrSameAddress
 	}
-	return strings.ToLower(t.Address) < strings.ToLower(other.Address), nil
+	return strings.ToLower(t.Address.Hex()) < strings.ToLower(other.Address.Hex()), nil
 }

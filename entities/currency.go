@@ -4,14 +4,14 @@ package entities
 type Currency struct {
 	IsNative bool   // Returns whether the currency is native to the chain and must be wrapped (e.g. Ether)
 	IsToken  bool   // Returns whether the currency is a token that is usable in Uniswap without wrapping
-	ChainID  int    // The chain ID on which this currency resides
-	Decimals int    // The decimals used in representing currency amounts
+	ChainID  uint   // The chain ID on which this currency resides
+	Decimals uint   // The decimals used in representing currency amounts
 	Symbol   string // The symbol of the currency, i.e. a short textual non-unique identifier
 	Name     string // The name of the currency, i.e. a descriptive textual non-unique identifier
 }
 
 // NewBaseCurrency constructs an instance of the `BaseCurrency`.
-func NewBaseCurrency(chainID int, decimals int, symbol string, name string) *Currency {
+func NewBaseCurrency(chainID uint, decimals uint, symbol string, name string) *Currency {
 	return &Currency{
 		ChainID:  chainID,
 		Decimals: decimals,
@@ -21,7 +21,7 @@ func NewBaseCurrency(chainID int, decimals int, symbol string, name string) *Cur
 }
 
 // NewNativeCurrency constructs an instrance of the `NativeCurrency`
-func NewNativeCurrency(chainID int, decimals int, symbol string, name string) *Currency {
+func NewNativeCurrency(chainID uint, decimals uint, symbol string, name string) *Currency {
 	return &Currency{
 		IsNative: true,
 		ChainID:  chainID,
@@ -32,7 +32,7 @@ func NewNativeCurrency(chainID int, decimals int, symbol string, name string) *C
 }
 
 // NewTokenCurrency constructs an instance of the `TokenCurrency`
-func NewTokenCurrency(chainID int, decimals int, symbol string, name string) *Currency {
+func NewTokenCurrency(chainID uint, decimals uint, symbol string, name string) *Currency {
 	return &Currency{
 		IsToken:  true,
 		ChainID:  chainID,

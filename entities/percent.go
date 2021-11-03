@@ -41,12 +41,12 @@ func (p *Percent) Divide(other *Percent) *Percent {
 	return toPercent(p.Fraction.Divide(other.Fraction))
 }
 
-// ToSignificantFigures converts a Percent to a string with a given number of significant figures
-func (p *Percent) ToSignificantFigures(significantDigits uint) string {
+// ToSignificant converts a Percent to a string with a given number of significant figures
+func (p *Percent) ToSignificant(significantDigits int32) string {
 	return p.Fraction.Multiply(OneHundred).ToSignificant(significantDigits)
 }
 
 // ToFixedFigures converts a Percent to a string with a given number of fixed figures
-func (p *Percent) ToFixed(decimalPlaces uint) string {
+func (p *Percent) ToFixed(decimalPlaces int32) string {
 	return p.Fraction.Multiply(OneHundred).ToFixed(decimalPlaces)
 }

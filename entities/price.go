@@ -50,7 +50,7 @@ func (p *Price) Quote(currencyAmount *CurrencyAmount) (*CurrencyAmount, error) {
 	}
 
 	result := p.Fraction.Multiply(currencyAmount.Fraction)
-	return NewCurrencyAmount(p.QuoteCurrency, result.Numerator, result.Denominator), nil
+	return newCurrencyAmount(p.QuoteCurrency, result.Numerator, result.Denominator), nil
 }
 
 // adjustedForDecimals Get the value scaled by decimals for formatting
@@ -58,10 +58,10 @@ func (p *Price) adjustedForDecimals() *Fraction {
 	return p.Fraction.Multiply(p.Scalar)
 }
 
-func (p *Price) ToSignificant(significantDigits uint) string {
+func (p *Price) ToSignificant(significantDigits int32) string {
 	return p.adjustedForDecimals().ToSignificant(significantDigits)
 }
 
-func (p *Price) ToFixed(decimalPlaces uint) string {
+func (p *Price) ToFixed(decimalPlaces int32) string {
 	return p.adjustedForDecimals().ToFixed(decimalPlaces)
 }

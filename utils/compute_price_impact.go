@@ -13,6 +13,6 @@ func ComputePriceImpact(midPrice *entities.Price, inputAmount, outputAmount *ent
 	if err != nil {
 		return nil, err
 	}
-	priceImpact := quotedOutputAmount.Subtract(outputAmount).Divide(quotedOutputAmount)
+	priceImpact := quotedOutputAmount.Subtract(outputAmount).Divide(quotedOutputAmount.Fraction)
 	return entities.NewPercent(priceImpact.Numerator, priceImpact.Denominator), nil
 }

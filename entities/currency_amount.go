@@ -1,6 +1,8 @@
 package entities
 
-import "math/big"
+import (
+	"math/big"
+)
 
 type CurrencyAmount struct {
 	*Fraction
@@ -14,7 +16,7 @@ type CurrencyAmount struct {
  * @param rawAmount the raw token or ether amount
  */
 func FromRawAmount(currency *Currency, rawAmount *big.Int) *CurrencyAmount {
-	return NewCurrencyAmount(currency, rawAmount, big.NewInt(1))
+	return newCurrencyAmount(currency, rawAmount, big.NewInt(1))
 }
 
 /**
@@ -24,14 +26,20 @@ func FromRawAmount(currency *Currency, rawAmount *big.Int) *CurrencyAmount {
  * @param denominator the denominator of the fractional token amount
  */
 func FromFractionalAmount(currency *Currency, numerator *big.Int, denominator *big.Int) *CurrencyAmount {
-	return NewCurrencyAmount(currency, numerator, denominator)
+	return newCurrencyAmount(currency, numerator, denominator)
 }
 
 // NewCurrencyAmount creates a new CurrencyAmount instance
-func NewCurrencyAmount(currency *Currency, numerator, denominator *big.Int) *CurrencyAmount {
+func newCurrencyAmount(currency *Currency, numerator, denominator *big.Int) *CurrencyAmount {
+	f := NewFraction(numerator, denominator)
+
+	if f.Quotient().Cmp(MaxUint256) > 0 {
+		panic("Currency amount exceeds maximum value(uint256)")
+	}
+
 	return &CurrencyAmount{
 		Currency:     currency,
-		Fraction:     NewFraction(numerator, denominator),
+		Fraction:     f,
 		DecimalScale: new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(currency.Decimals)), nil),
 	}
 }
@@ -49,14 +57,14 @@ func (ca *CurrencyAmount) Subtract(other *CurrencyAmount) *CurrencyAmount {
 }
 
 // Multiply multiplies two currency amounts
-func (ca *CurrencyAmount) Multiply(other *CurrencyAmount) *CurrencyAmount {
-	multiplied := ca.Fraction.Multiply(other.Fraction)
+func (ca *CurrencyAmount) Multiply(other *Fraction) *CurrencyAmount {
+	multiplied := ca.Fraction.Multiply(other)
 	return FromFractionalAmount(ca.Currency, multiplied.Numerator, multiplied.Denominator)
 }
 
 // Divide divides one currency amount by another
-func (ca *CurrencyAmount) Divide(other *CurrencyAmount) *CurrencyAmount {
-	divided := ca.Fraction.Divide(other.Fraction)
+func (ca *CurrencyAmount) Divide(other *Fraction) *CurrencyAmount {
+	divided := ca.Fraction.Divide(other)
 	return FromFractionalAmount(ca.Currency, divided.Numerator, divided.Denominator)
 }
 

@@ -14,9 +14,9 @@ func TestFractionQuotient(t *testing.T) {
 }
 
 func TestFractionRemainder(t *testing.T) {
-	assert.Equal(t, NewFraction(big.NewInt(8), big.NewInt(3)).Remainder(), NewFraction(big.NewInt(2), big.NewInt(3)), "returns fraction after divison - 8/3")
-	assert.Equal(t, NewFraction(big.NewInt(12), big.NewInt(4)).Remainder(), NewFraction(big.NewInt(0), big.NewInt(4)), "returns fraction after divison - 12/4")
-	assert.Equal(t, NewFraction(big.NewInt(16), big.NewInt(5)).Remainder(), NewFraction(big.NewInt(1), big.NewInt(5)), "returns fraction after divison - 16/5")
+	assert.Equal(t, NewFraction(big.NewInt(8), big.NewInt(3)).Remainder(), NewFraction(big.NewInt(2), big.NewInt(3)), "returns fraction after division - 8/3")
+	assert.Equal(t, NewFraction(big.NewInt(12), big.NewInt(4)).Remainder(), NewFraction(big.NewInt(0), big.NewInt(4)), "returns fraction after division - 12/4")
+	assert.Equal(t, NewFraction(big.NewInt(16), big.NewInt(5)).Remainder(), NewFraction(big.NewInt(1), big.NewInt(5)), "returns fraction after division - 16/5")
 }
 
 func TestFractionInvert(t *testing.T) {

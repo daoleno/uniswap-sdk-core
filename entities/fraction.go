@@ -111,10 +111,7 @@ func roundToSignificantFigures(f *Fraction, figures int32) decimal.Decimal {
 	if figures <= 0 {
 		return decimal.Zero
 	}
-	t := decimal.NewFromBigInt(f.Numerator, 0)
-	fmt.Println(t)
 	d := decimal.NewFromBigInt(f.Numerator, 0).Div(decimal.NewFromBigInt(f.Denominator, 0))
-	// d = Normalize(d)
 	twoMant := d.Mul(decimal.NewFromFloat(math.Pow10(decimal.DivisionPrecision))).BigInt()
 	twoMant.Abs(twoMant)
 	twoMant.Mul(twoMant, twoInt)

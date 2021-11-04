@@ -2,6 +2,8 @@ package entities
 
 import (
 	"math/big"
+
+	"github.com/shopspring/decimal"
 )
 
 type CurrencyAmount struct {
@@ -69,19 +71,19 @@ func (ca *CurrencyAmount) Divide(other *Fraction) *CurrencyAmount {
 }
 
 // ToSignificant returns the currency amount as a string with the most significant digits
-func (ca *CurrencyAmount) ToSignificant(significantDigits int) string {
-	// TODO
-	return ""
+func (ca *CurrencyAmount) ToSignificant(significantDigits int32) string {
+	return ca.Fraction.Divide(NewFraction(ca.DecimalScale, big.NewInt(1))).ToSignificant(significantDigits)
 }
 
 // ToFixed returns the currency amount as a string with the specified number of digits after the decimal
-func (ca *CurrencyAmount) ToFixed(decimalPlaces int) string {
-	// TODO
-	return ""
+func (ca *CurrencyAmount) ToFixed(decimalPlaces int32) string {
+	if uint(decimalPlaces) > ca.Currency.Decimals {
+		panic("Decimal places exceeds currency decimals")
+	}
+	return ca.Fraction.Divide(NewFraction(ca.DecimalScale, big.NewInt(1))).ToFixed(decimalPlaces)
 }
 
 // ToExact returns the currency amount as a string with the specified number of digits after the decimal
-func (ca *CurrencyAmount) ToExact(decimalPlaces int) string {
-	// TODO
-	return ""
+func (ca *CurrencyAmount) ToExact() string {
+	return decimal.NewFromBigInt(ca.Quotient(), 0).Div(decimal.NewFromBigInt(ca.DecimalScale, 0)).String()
 }

@@ -20,6 +20,6 @@ func EtherOnChain(chainID uint) *Ether {
 }
 
 // Equals compares two Ethers for equality
-func (e *Ether) Equals(other *Ether) bool {
+func (e *Ether) Equals(other *Currency) bool {
 	return other.IsNative && other.ChainID == e.ChainID
 }

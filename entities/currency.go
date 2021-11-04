@@ -33,6 +33,10 @@ func NewNativeCurrency(chainID uint, decimals uint, symbol string, name string) 
 
 // NewTokenCurrency constructs an instance of the `TokenCurrency`
 func NewTokenCurrency(chainID uint, decimals uint, symbol string, name string) *Currency {
+	if decimals >= 255 {
+		panic("Token currency decimals must be less than 255")
+	}
+
 	return &Currency{
 		IsToken:  true,
 		ChainID:  chainID,

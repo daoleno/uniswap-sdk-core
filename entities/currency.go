@@ -13,6 +13,8 @@ type Currency struct {
 // NewBaseCurrency constructs an instance of the `BaseCurrency`.
 func NewBaseCurrency(chainID uint, decimals uint, symbol string, name string) *Currency {
 	return &Currency{
+		IsToken:  true,
+		IsNative: true,
 		ChainID:  chainID,
 		Decimals: decimals,
 		Symbol:   symbol,

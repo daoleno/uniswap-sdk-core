@@ -26,13 +26,21 @@ func NewToken(chainID uint, address common.Address, decimals uint, symbol string
 	}
 }
 
+// NewNativeToken creates a new native token with the given currency and address.
+func NewNativeToken(chainID uint, address common.Address, decimals uint, symbol string, name string) *Token {
+	return &Token{
+		Currency: NewBaseCurrency(chainID, decimals, symbol, name),
+		Address:  address,
+	}
+}
+
 /**
  * Returns true if the two tokens are equivalent, i.e. have the same chainId and address.
  * @param other other token to compare
  */
 
 func (t *Token) Equals(other *Token) bool {
-	return other.IsToken && t.ChainID == other.ChainID && t.Address == other.Address
+	return t.ChainID == other.ChainID && t.Address == other.Address
 }
 
 /**

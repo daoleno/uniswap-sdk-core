@@ -19,34 +19,34 @@ var (
 )
 
 func TestNewPrice(t *testing.T) {
-	price0 := NewPrice(t0.Currency, t1.Currency, big.NewInt(1), big.NewInt(54321))
+	price0 := NewPrice(t0, t1, big.NewInt(1), big.NewInt(54321))
 	assert.Equal(t, price0.ToSignificant(5), "54321")
-	assert.True(t, price0.BaseCurrency.Equal(t0.Currency))
-	assert.True(t, price0.QuoteCurrency.Equal(t1.Currency))
+	assert.True(t, price0.BaseCurrency.Equal(t0))
+	assert.True(t, price0.QuoteCurrency.Equal(t1))
 }
 
 func TestQuote(t *testing.T) {
-	price := NewPrice(t0.Currency, t1.Currency, big.NewInt(1), big.NewInt(5))
-	q, err := price.Quote(FromRawAmount(t0.Currency, big.NewInt(10)))
+	price := NewPrice(t0, t1, big.NewInt(1), big.NewInt(5))
+	q, err := price.Quote(FromRawAmount(t0, big.NewInt(10)))
 	if err != nil {
 		panic(err)
 	}
-	assert.Equal(t, q, FromRawAmount(t1.Currency, big.NewInt(50)))
+	assert.Equal(t, q, FromRawAmount(t1, big.NewInt(50)))
 }
 
 func TestPriceToSignificant(t *testing.T) {
-	price0 := NewPrice(t0.Currency, t1.Currency, big.NewInt(123), big.NewInt(456))
+	price0 := NewPrice(t0, t1, big.NewInt(123), big.NewInt(456))
 	assert.Equal(t, price0.ToSignificant(4), "3.707", "no decimals")
 
-	price1 := NewPrice(t0.Currency, t1.Currency, big.NewInt(456), big.NewInt(123))
+	price1 := NewPrice(t0, t1, big.NewInt(456), big.NewInt(123))
 	assert.Equal(t, price1.ToSignificant(4), "0.2697", "no decimals flip ratio")
 
-	price2 := NewPrice(t0_6.Currency, t1.Currency, big.NewInt(123), big.NewInt(456))
+	price2 := NewPrice(t0_6, t1, big.NewInt(123), big.NewInt(456))
 	assert.Equal(t, price2.ToSignificant(4), "0.000000000003707", "with decimal difference")
 
-	price3 := NewPrice(t0_6.Currency, t1.Currency, big.NewInt(456), big.NewInt(123))
+	price3 := NewPrice(t0_6, t1, big.NewInt(456), big.NewInt(123))
 	assert.Equal(t, price3.ToSignificant(4), "0.0000000000002697", "with decimal difference flipped")
 
-	price4 := NewPrice(t1.Currency, t0_6.Currency, big.NewInt(456), big.NewInt(123))
+	price4 := NewPrice(t1, t0_6, big.NewInt(456), big.NewInt(123))
 	assert.Equal(t, price4.ToSignificant(4), "269700000000", "with decimal difference flipped base quote flipped")
 }

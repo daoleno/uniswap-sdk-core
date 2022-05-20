@@ -12,50 +12,64 @@ var (
 	ErrSameAddress    = errors.New("same address")
 )
 
-// Represents an ERC20 token with a unique address and some metadata.
+// Token represents an ERC20 token with a unique address and some metadata.
 type Token struct {
-	*Currency
+	*baseCurrency
 	Address common.Address // The contract address on the chain on which this token lives
 }
 
 // NewToken creates a new token with the given currency and address.
 func NewToken(chainID uint, address common.Address, decimals uint, symbol string, name string) *Token {
-	return &Token{
-		Currency: NewTokenCurrency(chainID, decimals, symbol, name),
-		Address:  address,
+	if decimals >= 255 {
+		panic("Token currency decimals must be less than 255")
 	}
+	token := &Token{
+		baseCurrency: &baseCurrency{
+			isNative: false,
+			isToken:  true,
+			chainId:  chainID,
+			decimals: decimals,
+			symbol:   symbol,
+			name:     name,
+		},
+		Address: address,
+	}
+	token.baseCurrency.currency = token
+	return token
 }
 
-// NewNativeToken creates a new native token with the given currency and address.
-func NewNativeToken(chainID uint, address common.Address, decimals uint, symbol string, name string) *Token {
-	return &Token{
-		Currency: NewBaseCurrency(chainID, decimals, symbol, name),
-		Address:  address,
-	}
-}
-
+// Equal
 /**
  * Returns true if the two tokens are equivalent, i.e. have the same chainId and address.
- * @param other other token to compare
+ * @param other token to compare
  */
-
-func (t *Token) Equals(other *Token) bool {
-	return t.ChainID == other.ChainID && t.Address == other.Address
+func (t *Token) Equal(other Currency) bool {
+	if other != nil {
+		v, isToken := other.(*Token)
+		if isToken {
+			return v.isToken && t.chainId == v.chainId && t.Address == v.Address
+		}
+	}
+	return false
 }
 
+// SortsBefore
 /**
  * Returns true if the address of this token sorts before the address of the other token
  * @param other other token to compare
  * @throws if the tokens have the same address
  * @throws if the tokens are on different chains
  */
-
 func (t *Token) SortsBefore(other *Token) (bool, error) {
-	if t.ChainID != other.ChainID {
+	if t.chainId != other.chainId {
 		return false, ErrDifferentChain
 	}
 	if t.Address == other.Address {
 		return false, ErrSameAddress
 	}
 	return strings.ToLower(t.Address.Hex()) < strings.ToLower(other.Address.Hex()), nil
+}
+
+func (t *Token) Wrapped() *Token {
+	return t
 }

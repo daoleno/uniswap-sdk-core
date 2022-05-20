@@ -1,54 +1,57 @@
 package entities
 
-// A currency is any fungible financial instrument, including Ether, all ERC20 tokens, and other chain-native currencies
-type Currency struct {
-	IsNative bool   // Returns whether the currency is native to the chain and must be wrapped (e.g. Ether)
-	IsToken  bool   // Returns whether the currency is a token that is usable in Uniswap without wrapping
-	ChainID  uint   // The chain ID on which this currency resides
-	Decimals uint   // The decimals used in representing currency amounts
-	Symbol   string // The symbol of the currency, i.e. a short textual non-unique identifier
-	Name     string // The name of the currency, i.e. a descriptive textual non-unique identifier
+// Currency is any fungible financial instrument, including Ether, all ERC20 tokens, and other chain-native currencies
+type Currency interface {
+	IsNative() bool
+	IsToken() bool
+	ChainId() uint
+	Decimals() uint
+	Symbol() string
+	Name() string
+	Equal(other Currency) bool
+	Wrapped() *Token
 }
 
-// NewBaseCurrency constructs an instance of the `BaseCurrency`.
-func NewBaseCurrency(chainID uint, decimals uint, symbol string, name string) *Currency {
-	return &Currency{
-		IsToken:  true,
-		IsNative: true,
-		ChainID:  chainID,
-		Decimals: decimals,
-		Symbol:   symbol,
-		Name:     name,
-	}
+// baseCurrency is an abstract struct, do not use it directly
+type baseCurrency struct {
+	currency Currency
+	isNative bool   // Returns whether the currency is native to the chain and must be wrapped (e.g. Ether)
+	isToken  bool   // Returns whether the currency is a token that is usable in Uniswap without wrapping
+	chainId  uint   // The chain ID on which this currency resides
+	decimals uint   // The decimals used in representing currency amounts
+	symbol   string // The symbol of the currency, i.e. a short textual non-unique identifier
+	name     string // The name of the currency, i.e. a descriptive textual non-unique identifier
 }
 
-// NewNativeCurrency constructs an instrance of the `NativeCurrency`
-func NewNativeCurrency(chainID uint, decimals uint, symbol string, name string) *Currency {
-	return &Currency{
-		IsNative: true,
-		ChainID:  chainID,
-		Decimals: decimals,
-		Symbol:   symbol,
-		Name:     name,
-	}
+func (c *baseCurrency) IsNative() bool {
+	return c.isNative
 }
 
-// NewTokenCurrency constructs an instance of the `TokenCurrency`
-func NewTokenCurrency(chainID uint, decimals uint, symbol string, name string) *Currency {
-	if decimals >= 255 {
-		panic("Token currency decimals must be less than 255")
-	}
+func (c *baseCurrency) IsToken() bool {
+	return c.isToken
+}
 
-	return &Currency{
-		IsToken:  true,
-		ChainID:  chainID,
-		Decimals: decimals,
-		Symbol:   symbol,
-		Name:     name,
-	}
+func (c *baseCurrency) ChainId() uint {
+	return c.chainId
+}
+
+func (c *baseCurrency) Decimals() uint {
+	return c.decimals
+}
+
+func (c *baseCurrency) Symbol() string {
+	return c.symbol
+}
+
+func (c *baseCurrency) Name() string {
+	return c.name
 }
 
 // Equal returns whether the currency is equal to the other currency
-func (c *Currency) Equal(other *Currency) bool {
-	return c.ChainID == other.ChainID && c.Decimals == other.Decimals && c.Symbol == other.Symbol && c.Name == other.Name
+func (c *baseCurrency) Equal(other Currency) bool {
+	panic("Equal method has to be overridden")
+}
+
+func (c *baseCurrency) Wrapped() *Token {
+	panic("Wrapped method has to be overridden")
 }

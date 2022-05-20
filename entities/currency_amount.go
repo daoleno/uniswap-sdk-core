@@ -8,7 +8,7 @@ import (
 
 type CurrencyAmount struct {
 	*Fraction
-	Currency     *Currency
+	Currency     Currency
 	DecimalScale *big.Int
 }
 
@@ -17,7 +17,7 @@ type CurrencyAmount struct {
  * @param currency the currency in the amount
  * @param rawAmount the raw token or ether amount
  */
-func FromRawAmount(currency *Currency, rawAmount *big.Int) *CurrencyAmount {
+func FromRawAmount(currency Currency, rawAmount *big.Int) *CurrencyAmount {
 	return newCurrencyAmount(currency, rawAmount, big.NewInt(1))
 }
 
@@ -27,12 +27,12 @@ func FromRawAmount(currency *Currency, rawAmount *big.Int) *CurrencyAmount {
  * @param numerator the numerator of the fractional token amount
  * @param denominator the denominator of the fractional token amount
  */
-func FromFractionalAmount(currency *Currency, numerator *big.Int, denominator *big.Int) *CurrencyAmount {
+func FromFractionalAmount(currency Currency, numerator *big.Int, denominator *big.Int) *CurrencyAmount {
 	return newCurrencyAmount(currency, numerator, denominator)
 }
 
 // NewCurrencyAmount creates a new CurrencyAmount instance
-func newCurrencyAmount(currency *Currency, numerator, denominator *big.Int) *CurrencyAmount {
+func newCurrencyAmount(currency Currency, numerator, denominator *big.Int) *CurrencyAmount {
 	f := NewFraction(numerator, denominator)
 
 	if f.Quotient().Cmp(MaxUint256) > 0 {
@@ -42,7 +42,7 @@ func newCurrencyAmount(currency *Currency, numerator, denominator *big.Int) *Cur
 	return &CurrencyAmount{
 		Currency:     currency,
 		Fraction:     f,
-		DecimalScale: new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(currency.Decimals)), nil),
+		DecimalScale: new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(currency.Decimals())), nil),
 	}
 }
 
@@ -77,7 +77,7 @@ func (ca *CurrencyAmount) ToSignificant(significantDigits int32) string {
 
 // ToFixed returns the currency amount as a string with the specified number of digits after the decimal
 func (ca *CurrencyAmount) ToFixed(decimalPlaces int32) string {
-	if uint(decimalPlaces) > ca.Currency.Decimals {
+	if uint(decimalPlaces) > ca.Currency.Decimals() {
 		panic("Decimal places exceeds currency decimals")
 	}
 	return ca.Fraction.Divide(NewFraction(ca.DecimalScale, big.NewInt(1))).ToFixed(decimalPlaces)
@@ -86,4 +86,11 @@ func (ca *CurrencyAmount) ToFixed(decimalPlaces int32) string {
 // ToExact returns the currency amount as a string with the specified number of digits after the decimal
 func (ca *CurrencyAmount) ToExact() string {
 	return decimal.NewFromBigInt(ca.Quotient(), 0).Div(decimal.NewFromBigInt(ca.DecimalScale, 0)).String()
+}
+
+func (ca *CurrencyAmount) Wrapped() *CurrencyAmount {
+	if ca.Currency.IsToken() {
+		return ca
+	}
+	return newCurrencyAmount(ca.Currency.Wrapped(), ca.Numerator, ca.Denominator)
 }

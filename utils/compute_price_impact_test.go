@@ -18,9 +18,9 @@ func TestComputePriceImpact(t *testing.T) {
 		t1 = entities.NewToken(1, AddressOne, 18, "", "")
 	)
 	impact0, err := ComputePriceImpact(
-		entities.NewPrice(entities.EtherOnChain(1).Currency, t0.Currency, big.NewInt(10), big.NewInt(100)),
-		entities.FromRawAmount(entities.EtherOnChain(1).Currency, big.NewInt(10)),
-		entities.FromRawAmount(t0.Currency, big.NewInt(100)))
+		entities.NewPrice(entities.EtherOnChain(1), t0, big.NewInt(10), big.NewInt(100)),
+		entities.FromRawAmount(entities.EtherOnChain(1), big.NewInt(10)),
+		entities.FromRawAmount(t0, big.NewInt(100)))
 
 	if err != nil {
 		panic(err)
@@ -28,9 +28,9 @@ func TestComputePriceImpact(t *testing.T) {
 	assert.Equal(t, impact0, entities.NewPercent(big.NewInt(0), big.NewInt(10000)), "is correct for zero")
 
 	impact1, err := ComputePriceImpact(
-		entities.NewPrice(t0.Currency, t1.Currency, big.NewInt(10), big.NewInt(100)),
-		entities.FromRawAmount(t0.Currency, big.NewInt(10)),
-		entities.FromRawAmount(t1.Currency, big.NewInt(50)))
+		entities.NewPrice(t0, t1, big.NewInt(10), big.NewInt(100)),
+		entities.FromRawAmount(t0, big.NewInt(10)),
+		entities.FromRawAmount(t1, big.NewInt(50)))
 
 	if err != nil {
 		panic(err)
@@ -38,9 +38,9 @@ func TestComputePriceImpact(t *testing.T) {
 	assert.Equal(t, impact1, entities.NewPercent(big.NewInt(5000), big.NewInt(10000)), "is correct for half output")
 
 	impact2, err := ComputePriceImpact(
-		entities.NewPrice(t0.Currency, t1.Currency, big.NewInt(10), big.NewInt(100)),
-		entities.FromRawAmount(t0.Currency, big.NewInt(10)),
-		entities.FromRawAmount(t1.Currency, big.NewInt(200)))
+		entities.NewPrice(t0, t1, big.NewInt(10), big.NewInt(100)),
+		entities.FromRawAmount(t0, big.NewInt(10)),
+		entities.FromRawAmount(t1, big.NewInt(200)))
 
 	if err != nil {
 		panic(err)

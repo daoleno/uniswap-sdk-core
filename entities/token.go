@@ -14,7 +14,7 @@ var (
 
 // Token represents an ERC20 token with a unique address and some metadata.
 type Token struct {
-	*baseCurrency
+	*BaseCurrency
 	Address common.Address // The contract address on the chain on which this token lives
 }
 
@@ -24,7 +24,7 @@ func NewToken(chainID uint, address common.Address, decimals uint, symbol string
 		panic("Token currency decimals must be less than 255")
 	}
 	token := &Token{
-		baseCurrency: &baseCurrency{
+		BaseCurrency: &BaseCurrency{
 			isNative: false,
 			isToken:  true,
 			chainId:  chainID,
@@ -34,7 +34,7 @@ func NewToken(chainID uint, address common.Address, decimals uint, symbol string
 		},
 		Address: address,
 	}
-	token.baseCurrency.currency = token
+	token.BaseCurrency.currency = token
 	return token
 }
 

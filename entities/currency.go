@@ -12,8 +12,8 @@ type Currency interface {
 	Wrapped() *Token
 }
 
-// baseCurrency is an abstract struct, do not use it directly
-type baseCurrency struct {
+// BaseCurrency is an abstract struct, do not use it directly
+type BaseCurrency struct {
 	currency Currency
 	isNative bool   // Returns whether the currency is native to the chain and must be wrapped (e.g. Ether)
 	isToken  bool   // Returns whether the currency is a token that is usable in Uniswap without wrapping
@@ -23,35 +23,35 @@ type baseCurrency struct {
 	name     string // The name of the currency, i.e. a descriptive textual non-unique identifier
 }
 
-func (c *baseCurrency) IsNative() bool {
+func (c *BaseCurrency) IsNative() bool {
 	return c.isNative
 }
 
-func (c *baseCurrency) IsToken() bool {
+func (c *BaseCurrency) IsToken() bool {
 	return c.isToken
 }
 
-func (c *baseCurrency) ChainId() uint {
+func (c *BaseCurrency) ChainId() uint {
 	return c.chainId
 }
 
-func (c *baseCurrency) Decimals() uint {
+func (c *BaseCurrency) Decimals() uint {
 	return c.decimals
 }
 
-func (c *baseCurrency) Symbol() string {
+func (c *BaseCurrency) Symbol() string {
 	return c.symbol
 }
 
-func (c *baseCurrency) Name() string {
+func (c *BaseCurrency) Name() string {
 	return c.name
 }
 
 // Equal returns whether the currency is equal to the other currency
-func (c *baseCurrency) Equal(other Currency) bool {
+func (c *BaseCurrency) Equal(other Currency) bool {
 	panic("Equal method has to be overridden")
 }
 
-func (c *baseCurrency) Wrapped() *Token {
+func (c *BaseCurrency) Wrapped() *Token {
 	panic("Wrapped method has to be overridden")
 }

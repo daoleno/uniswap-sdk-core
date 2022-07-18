@@ -2,12 +2,12 @@ package entities
 
 // Ether is the main usage of a 'native' currency, i.e. for Ethereum mainnet and all testnets
 type Ether struct {
-	*baseCurrency
+	*BaseCurrency
 }
 
 func EtherOnChain(chainId uint) *Ether {
 	ether := &Ether{
-		baseCurrency: &baseCurrency{
+		BaseCurrency: &BaseCurrency{
 			isNative: true,
 			isToken:  false,
 			chainId:  chainId,
@@ -16,7 +16,7 @@ func EtherOnChain(chainId uint) *Ether {
 			name:     "Ether",
 		},
 	}
-	ether.baseCurrency.currency = ether
+	ether.BaseCurrency.currency = ether
 	return ether
 }
 
